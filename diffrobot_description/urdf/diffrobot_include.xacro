@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<robot name ="diffrobot"
+  xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- This file is not a robot in and of itself, it just contains some useful tags that could be included in any robot -->
+  <!-- <xacro:include filename="diffrobot_gazebo.xacro" /> -->
+
+
+  <xacro:property name="chassis_radius" value="0.085" />
+  <xacro:property name="chassis_length" value="0.13" />
+  <xacro:property name="chassis_mass" value="5" />
+  <xacro:property name="caster_radius" value="0.018" />
+  <xacro:property name="PI" value="3.1415"/>
+  <xacro:property name="wheels_radius" value="0.0315" />
+  <xacro:property name="wheels_length" value="0.0125" />
+  <!-- <xacro:property name="wheels_mass" value="0.2" /> -->
+  <xacro:property name="wheels_mass" value="2" />
+  <xacro:property name="wheels_x_axis_offset" value="${chassis_radius/3}" />
+  <xacro:property name="line_sensor_width" value="0.02"/>
+  <xacro:property name="line_sensor_height" value="0.0025"/>
+  <xacro:property name="line_sensor_length" value="${2*chassis_radius}"/>
+  <xacro:property name="PCB_box_length" value="0.2" />
+  <xacro:property name="PCB_box_width" value="0.3" />
+  <xacro:property name="PCB_box_height" value="0.1" />
+  <xacro:property name="PI" value="3.1415"/>
+  <xacro:property name="ultrasonic_sensor_pcb_length" value="0.045"/>
+  <xacro:property name="ultrasonic_sensor_pcb_width" value="0.020"/>
+  <xacro:property name="ultrasonic_sensor_pcb_height" value="0.0015"/>
+  <xacro:property name="ultrasonic_sensor_radius" value="0.008"/>
+  <xacro:property name="ultrasonic_sensor_height" value="0.012"/>
+  <xacro:property name="ultrasonic_sensor_rt_distance" value="0.026"/>
+
+  <!-- Specify some colours -->
+
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+  <material name="orange">
+    <color rgba="${255/255} ${108/255} ${10/255} 1.0"/>
+  </material>
+
+  <material name="gray">
+    <color rgba="${128/255} ${128/255} ${128/255} 1.0"/>
+  </material>
+
+  <material name="darkblue">
+    <color rgba="${60/255} ${50/255} ${200/255} 1.0"/>
+  </material>
+
+
+
+  <!-- Specify some standard inertial calculations https://en.wikipedia.org/wiki/List_of_moments_of_inertia -->
+  <!-- These make use of xacro's mathematical functionality -->
+
+  <xacro:macro name="inertial_cylinder" params="radius length mass *origin">
+    <inertial>
+      <xacro:insert_block name="origin"/>
+      <mass value ="${mass}" />
+      <inertia ixx="${(1/12)*mass*(3*radius*radius+length*length)}" ixy="0.0" ixz="0.0" iyy="${(1/12)*mass*(3*radius*radius+length*length)}" iyz="0.0" izz="${(1/2)*mass*radius*radius}" />
+    </inertial>
+  </xacro:macro>
+
+
+
+  <xacro:macro name="wheel" params="prefix reflect">
+    <link name="$(arg ns)${prefix}_wheel">
+      <visual name="$(arg ns)${prefix}_wheel_visual">
+        <geometry>
+          <cylinder length="${wheels_length}" radius="${wheels_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <material name="black" />
+      </visual>
+
+      <collision name="$(arg ns)${prefix}_wheel_collision">
+        <geometry>
+          <cylinder length="${wheels_length}" radius="${wheels_radius}"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <!-- <surface>
+       		        <friction>
+        	            <ode>
+            	            <mu>1.0</mu>
+            		        <mu2>1.0</mu2>
+           		            <slip1>0.0</slip1>
+           		            <slip2>0.0</slip2>
+         	            </ode>
+        	        </friction>
+      	        </surface> -->
+      </collision>
+
+      <xacro:inertial_cylinder radius="${wheels_radius}" length="${wheels_length}" mass="${wheels_mass}">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </xacro:inertial_cylinder>
+    </link>
+
+
+    <joint name="$(arg ns)${prefix}_wheel_base_link_joint" type="continuous">
+      <axis xyz="0 0 1" rpy="0 0 0"/>
+      <parent link="$(arg ns)base_link"/>
+      <child link="$(arg ns)${prefix}_wheel"/>
+      <origin xyz="${wheels_x_axis_offset} ${reflect * (chassis_radius + wheels_length/2)} ${-chassis_length/2 -caster_radius + wheels_radius}" rpy="0 ${PI/2} ${PI/2}"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+  </xacro:macro>
+
+
+</robot>
