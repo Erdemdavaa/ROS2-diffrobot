@@ -1,8 +1,6 @@
 from setuptools import find_packages, setup
-import os
-from glob import glob
 
-package_name = 'diffrobot_simulation'
+package_name = 'diffrobot_slam'
 
 setup(
     name=package_name,
@@ -12,17 +10,16 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share', package_name, 'launch'), glob('launch/*')),
-        (os.path.join('share', package_name, 'worlds'), glob('worlds/*')),
-        (os.path.join('share', package_name, 'rviz'), glob('urdf/*')),
-        (os.path.join('share', package_name, 'config'), glob('config/*')),
+        ('share/' + package_name + '/launch', ['launch/slam_launch.py']),
+        ('share/' + package_name + '/config', ['config/slam_params.yaml']),
+
     ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='erdemdavaa',
     maintainer_email='mherodavaa@gmail.com',
     description='TODO: Package description',
-    license='Apache license 2.0',
+    license='TODO: License declaration',
     extras_require={
         'test': [
             'pytest',
