@@ -13,7 +13,8 @@ def generate_launch_description():
     world_file = os.path.join(
         get_package_share_directory(world_pkg_name),
         'worlds',
-        'diffrobot_example_world.sdf'
+        #'diffrobot_example_world.sdf'
+        'diffrobot_example_world.world'
     )
 
     # Launch Gazebo with your world

@@ -26,6 +26,30 @@ controller_server:
     controller_plugins: ["FollowPath"]
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
+      # added something
+      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+      RotateToGoal:
+        plugin: "dwb_critics::RotateToGoal"
+        scale: 1.0
+      Oscillation:
+        plugin: "dwb_critics::Oscillation"
+        scale: 1.0
+      BaseObstacle:
+        plugin: "dwb_critics::BaseObstacle"
+        scale: 1.0
+      GoalAlign:
+        plugin: "dwb_critics::GoalAlign"
+        scale: 0.0
+      PathAlign:
+        plugin: "dwb_critics::PathAlign"
+        scale: 5.0
+      PathDist:
+        plugin: "dwb_critics::PathDist"
+        scale: 10.0
+      GoalDist:
+        plugin: "dwb_critics::GoalDist"
+        scale: 10.0
+      #end of addition
 
 bt_navigator:
   ros__parameters:

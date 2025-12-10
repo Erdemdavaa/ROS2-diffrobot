@@ -50,6 +50,18 @@ def generate_launch_description():
         ],
         output='screen',
     )
+    # start_gazebo_ros_spawner = Node(
+    #     package='ros_gz_sim',
+    #     executable='spawn_entity.py',
+    #     name='robot_spawner',
+    #     output='screen',
+    #     arguments=[
+    #         '-topic', 'robot_description',
+    #         '-entity', 'diff_robot',
+    #         '-z', '0.01'
+    #     ]
+    # )
+
 
 
     return LaunchDescription([
