@@ -1,0 +1,54 @@
+cmake_minimum_required(VERSION 3.8)
+project(diffrobot_vff_controller)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(nav2_core REQUIRED)
+find_package(nav2_util REQUIRED)
+find_package(nav2_costmap_2d REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(pluginlib REQUIRED)
+
+include_directories(include)
+
+add_library(diffrobot_vff_controller SHARED
+  src/vff_controller.cpp
+)
+
+ament_target_dependencies(diffrobot_vff_controller
+  rclcpp
+  nav2_core
+  nav2_util
+  nav2_costmap_2d
+  geometry_msgs
+  nav_msgs
+  tf2_ros
+  pluginlib
+)
+
+pluginlib_export_plugin_description_file(nav2_core plugins.xml)
+
+install(
+  TARGETS diffrobot_vff_controller
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+install(
+  DIRECTORY include/
+  DESTINATION include/
+)
+
+install(
+  FILES plugins.xml
+  DESTINATION share/${PROJECT_NAME}
+)
+
+ament_package()
